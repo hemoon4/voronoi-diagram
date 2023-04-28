@@ -8,39 +8,12 @@
 
 #include "ImGuiWindow.hpp"
 
-int main() {
-    sf::RenderWindow window(sf::VideoMode(1080, 720), "ImGui + SFML = <3");
-    window.setFramerateLimit(60);
-    ImGuiWindow imguiWindow(window);
-    sf::VertexArray points(sf::Points, 0);
-    sf::Clock deltaClock;
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(window, event);
-
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
-        
-        imguiWindow.update(deltaClock.restart());
-       
-        if(imguiWindow.getIsAddPointButtonClicked()){
-          
-          const sf::Vector2f pos{imguiWindow.getStateX(), imguiWindow.getStateY()};
-          const sf::Vertex point{pos,sf::Color::Red};
-          points.append(point);
-
-        }
-
-        window.clear();
-        window.draw(points);
-        imguiWindow.render();
-        window.display();
-    }
-  
-    ImGui::SFML::Shutdown();
-
-    return 0;
+#include "Application.hpp"
+int main() 
+{
+  const unsigned int WIDTH  = 1080, 
+                     HEIGHT = 720;
+  Application app(WIDTH, HEIGHT);
+  app.run();
+  return 0;
 }
