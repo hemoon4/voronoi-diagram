@@ -1,20 +1,18 @@
-#include <imgui_sfml/imgui.h> // necessary for ImGui::*, imgui-SFML.h doesn't include imgui.h
-
-#include <imgui_sfml/imgui-SFML.h> // for ImGui::SFML::* functions and SFML-specific overloads
+#include <imgui_sfml/imgui.h>
+#include <imgui_sfml/imgui-SFML.h> 
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "ImGuiWindow.hpp"
+
 int main() {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "ImGui + SFML = <3");
+    sf::RenderWindow window(sf::VideoMode(1080, 720), "ImGui + SFML = <3");
     window.setFramerateLimit(60);
-    ImGui::SFML::Init(window);
-
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
+    ImGuiWindow imguiWindow(window);
+    sf::VertexArray points(sf::Points, 0);
     sf::Clock deltaClock;
     while (window.isOpen()) {
         sf::Event event;
@@ -25,17 +23,23 @@ int main() {
                 window.close();
             }
         }
+        
+        imguiWindow.update(deltaClock.restart());
+       
+        if(imguiWindow.getIsAddPointButtonClicked()){
+          
+          const sf::Vector2f pos{imguiWindow.getStateX(), imguiWindow.getStateY()};
+          const sf::Vertex point{pos,sf::Color::Red};
+          points.append(point);
 
-        ImGui::SFML::Update(window, deltaClock.restart());
-
-        ImGui::ShowDemoWindow();
+        }
 
         window.clear();
-        window.draw(shape);
-        ImGui::SFML::Render(window);
+        window.draw(points);
+        imguiWindow.render();
         window.display();
     }
-
+  
     ImGui::SFML::Shutdown();
 
     return 0;
