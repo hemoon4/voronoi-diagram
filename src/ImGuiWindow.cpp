@@ -4,7 +4,12 @@
 #include <imgui_sfml/imgui-SFML.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-ImGuiWindow::ImGuiWindow(sf::RenderWindow& window) : m_window(window), m_stateX(0.f), m_stateY(0.f){
+ImGuiWindow::ImGuiWindow(sf::RenderWindow& window) 
+  : m_window(window), 
+    m_stateX(0.f), 
+    m_stateY(0.f),
+    m_isAddPointButtonClicked(false)
+{
   ImGui::SFML::Init(m_window);
 } 
 
@@ -34,10 +39,13 @@ void ImGuiWindow::update(sf::Time dt)
 
 void ImGuiWindow::render() 
 {
-  m_isAddPointButtonClicked = false;
+  m_isAddPointButtonClicked &= 0;
   ImGui::SFML::Render(m_window);
 }
 
+void ImGuiWindow::end(){
+  ImGui::SFML::Shutdown();
+}
 bool ImGuiWindow::getIsAddPointButtonClicked() const
 {
   return m_isAddPointButtonClicked;

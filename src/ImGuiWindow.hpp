@@ -11,6 +11,7 @@ public:
   void processEvent(const sf::Event&) const;
   void update(const sf::Time);
   void render();
+  void end();
   float getStateX() const;
   float getStateY() const;
   bool getIsAddPointButtonClicked() const;
