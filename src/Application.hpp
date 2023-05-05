@@ -14,7 +14,10 @@ public:
   ~Application();
 private:
   void handleEvents();
+  void update(sf::Time dt);
+  void draw();
   void calculateVoronoiDiagram();
+  void addPoint();
 private:
   sf::RenderWindow m_window;
   ImGuiWindow m_imguiWindow;

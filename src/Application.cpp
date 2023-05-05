@@ -41,33 +41,23 @@ void Application::handleEvents()
   }
 }
 
-void Application::run()
+void Application::update(sf::Time dt)
 {
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_int_distribution<int> distrib(0,230);
 
-  sf::Clock deltaClock;
-  sf::CircleShape circle{9.f};
-  while (m_window.isOpen()) 
-  {
-    handleEvents();
+    m_imguiWindow.update(dt);
 
-    m_imguiWindow.update(deltaClock.restart());
-
-    
     if(m_imguiWindow.getIsAddPointButtonClicked())
     {
-      sf::Vector2f pos{m_imguiWindow.getStateX(), m_imguiWindow.getStateY()};
-      unsigned char red = distrib(gen);
-      unsigned char green = distrib(gen);
-      unsigned char blue = distrib(gen);
-      sf::Color col{red, green, blue};
-      m_points->append(sf::Vertex{pos, col});
+      addPoint();
       calculateVoronoiDiagram();
     }
 
+}
 
+void Application::draw()
+{
+
+    sf::CircleShape circle{9.f};
     m_window.clear();
     m_window.draw(*m_pixels);
     m_window.draw(*m_points);
@@ -78,6 +68,18 @@ void Application::run()
     }
     m_imguiWindow.render();
     m_window.display();
+}
+void Application::run()
+{
+
+  sf::Clock deltaClock;
+  while (m_window.isOpen()) 
+  {
+    handleEvents();
+
+    update(deltaClock.restart());
+
+    draw();
   }
   m_imguiWindow.end();
 }
@@ -104,4 +106,17 @@ void Application::calculateVoronoiDiagram()
   }
 }
 
-
+void Application::addPoint()
+{
+  
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<int> distrib(0,230);
+  sf::Vector2f pos{m_imguiWindow.getStateX(), m_imguiWindow.getStateY()};
+  unsigned char red = distrib(gen);
+  unsigned char green = distrib(gen);
+  unsigned char blue = distrib(gen);
+  sf::Color col{red, green, blue};
+  m_points->append(sf::Vertex{pos, col});
+      calculateVoronoiDiagram();
+}
