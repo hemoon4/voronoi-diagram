@@ -6,10 +6,10 @@
 class ImGuiWindow
 {
 public:
-  ImGuiWindow(sf::RenderWindow&);
+  ImGuiWindow(sf::RenderWindow& window);
   
-  void processEvent(const sf::Event&) const;
-  void update(const sf::Time);
+  void processEvent(const sf::Event& e) const;
+  void update(const sf::Time dt);
   void render();
   void end();
   float getStateX() const;

@@ -18,12 +18,10 @@ void ImGuiWindow::processEvent(const sf::Event& e) const
   ImGui::SFML::ProcessEvent(e);
 }
 
-void ImGuiWindow::update(sf::Time dt)
+void ImGuiWindow::update(const sf::Time dt)
 {
   ImGui::SFML::Update(m_window, dt);
 
-  ImGui::ShowDemoWindow();
-  
   ImGui::Begin("ImGui");
   ImGui::InputFloat("X", &m_stateX);
   ImGui::InputFloat("Y", &m_stateY);
@@ -39,7 +37,7 @@ void ImGuiWindow::update(sf::Time dt)
 
 void ImGuiWindow::render() 
 {
-  m_isAddPointButtonClicked &= 0;
+  m_isAddPointButtonClicked = false;
   ImGui::SFML::Render(m_window);
 }
 
