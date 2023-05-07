@@ -11,13 +11,14 @@ Application::Application(unsigned int width, unsigned int height)
     m_points(new sf::VertexArray{sf::Points, 0})
 {
   m_window.setFramerateLimit(60);
-  for(int x = 0; x < m_window.getSize().x; x++)
+  for(auto x = 0u; x < m_window.getSize().x; x++)
   {
-    for(int y = 0; y < m_window.getSize().y; y++)
+    for(auto y = 0u; y < m_window.getSize().y; y++)
     {
-      (*m_pixels)[y*m_window.getSize().x + x].position.x = x;
-      (*m_pixels)[y*m_window.getSize().x + x].position.y = y;
-      (*m_pixels)[y*m_window.getSize().x + x].color = sf::Color::Black; 
+      auto& pixel =  (*m_pixels)[y*m_window.getSize().x + x];
+      pixel.position.x = x;
+      pixel.position.y = y;
+      pixel.color = sf::Color::Black; 
     }
   }
 }
@@ -61,7 +62,7 @@ void Application::draw()
     m_window.clear();
     m_window.draw(*m_pixels);
     m_window.draw(*m_points);
-    for(int pointIndex = 0; pointIndex < m_points->getVertexCount(); pointIndex++)
+    for(std::size_t  pointIndex = 0; pointIndex < m_points->getVertexCount(); pointIndex++)
     {
       circle.setPosition((*m_points)[pointIndex].position);
       m_window.draw(circle);
@@ -86,22 +87,26 @@ void Application::run()
 
 void Application::calculateVoronoiDiagram()
 {
-  for(int x = 0; x < m_window.getSize().x; x++)
+  for(auto pixel_x = 0u; pixel_x < m_window.getSize().x; pixel_x++)
   {
-    for(int y = 0; y < m_window.getSize().y; y++)
+    for(auto pixel_y = 0u; pixel_y < m_window.getSize().y; pixel_y++)
     {
-      int min_distance = (x-(*m_points)[0].position.x) * (x-(*m_points)[0].position.x) + (y - (*m_points)[0].position.y) * (y-(*m_points)[0].position.y);
+      int point_x = (*m_points)[0].position.x,
+          point_y = (*m_points)[0].position.y;
+      int min_distance = (pixel_x-point_x) * (pixel_x-point_x) + (pixel_y - point_y) * (pixel_y-point_y);
       int min_point_index = 0;
-      for(int pointIndex = 1; pointIndex < m_points->getVertexCount(); pointIndex++)
+      for(std::size_t  pointIndex = 1; pointIndex < m_points->getVertexCount(); pointIndex++)
       {
-        int distance = (x-(*m_points)[pointIndex].position.x) * (x-(*m_points)[pointIndex].position.x) + (y - (*m_points)[pointIndex].position.y) * (y-(*m_points)[pointIndex].position.y);
+        point_x = (*m_points)[pointIndex].position.x;
+        point_y = (*m_points)[pointIndex].position.y;
+        int distance = (pixel_x-point_x) * (pixel_x-point_x) + (pixel_y - point_y) * (pixel_y-point_y);
         if (distance < min_distance)
         {
           min_distance = distance;
           min_point_index = pointIndex;
         }
       }
-      (*m_pixels)[y*m_window.getSize().x + x].color = (*m_points)[min_point_index].color; 
+      (*m_pixels)[pixel_y*m_window.getSize().x + pixel_x].color = (*m_points)[min_point_index].color; 
     }
   }
 }
